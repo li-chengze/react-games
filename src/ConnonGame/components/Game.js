@@ -13,7 +13,7 @@ import StartGameButton from './StartGameButton';
 import Title from './Title';
 
 
-import { MOVE_OBJECTS, START_GAME } from "../actions/actionTypes";
+import { MOVE_OBJECTS, START_GAME, SHOOT } from "../actions/actionTypes";
 import { getCanvasPosition } from '../utils/formula';
 
 class GameCanvas extends Component {
@@ -31,7 +31,7 @@ class GameCanvas extends Component {
     }
 
     render() {
-        const gameHeight = 1300;
+        const gameHeight = 1200;
         const viewBox = [window.innerWidth / -2, 100 - gameHeight, window.innerWidth, gameHeight];
         const style = { border: '1px solid black' };
         return (
@@ -39,7 +39,8 @@ class GameCanvas extends Component {
                 id="cannon-game-canvas"
                 viewBox={viewBox}
                 style={style}
-                onMouseMove={event => this.trackMouse(event)}>
+                onMouseMove={event => this.trackMouse(event)}
+                onClick={() => { this.props.shoot(this.canvasMousePosition) }}>
                 <defs>
                     <filter id="shadow">
                         <feDropShadow dx="1" dy="1" stdDeviation="2" />
@@ -47,9 +48,12 @@ class GameCanvas extends Component {
                 </defs>
                 <Sky />
                 <Ground />
+                {this.props.gameState.cannonBalls.map(cannonBall => <ConnonBall
+                    key={cannonBall.id}
+                    position={cannonBall.position}
+                />)}
                 <ConnonPipe rotation={this.props.angle} />
                 <ConnonBase />
-                <ConnonBall position={{ x: 0, y: -100 }} />
                 <CurrentScore score={15} />
                 {this.props.gameState.started &&
                     this.props.gameState.flyingObjects.map(
@@ -76,11 +80,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     moveMouseHandler:
-        mousePosition => dispatch(
-            { type: MOVE_OBJECTS, mousePosition: mousePosition }
-        ),
+        mousePosition => {
+            dispatch(
+                { type: MOVE_OBJECTS, mousePosition: mousePosition }
+            )
+        },
     startGame:
-        () => { dispatch({ type: START_GAME }) }
+        () => { dispatch({ type: START_GAME }) },
+    shoot: (mousePosition) => { dispatch({ type: SHOOT, mousePosition: mousePosition }) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameCanvas);
