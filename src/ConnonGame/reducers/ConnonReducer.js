@@ -1,8 +1,13 @@
-import { MOVE_OBJECTS } from "../actions/actionTypes";
+import { MOVE_OBJECTS, START_GAME } from "../actions/actionTypes";
 import { calculateAngle } from '../utils/formula';
 
 const initialState = {
-    angle: 45
+    angle: 45,
+    gameState: {
+        lives: 3,
+        scores: 0,
+        started: false,
+    }
 }
 
 const reducer = (state = initialState, action) => {
@@ -15,6 +20,14 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 angle,
             };
+        }
+        case START_GAME: {
+            const gameState = { ...state.gameState };
+            gameState.started = true;
+            return {
+                ...state,
+                gameState: gameState,
+            }
         }
         default: return state;
     }

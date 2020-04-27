@@ -8,7 +8,11 @@ import Game from "./components/Game";
 import cannonReducer from "./reducers/ConnonReducer";
 
 function App() {
-  const store = createStore(cannonReducer);
+
+  const store = createStore(
+    cannonReducer,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  );
 
   return (
     <Provider store={store}>
