@@ -31,7 +31,7 @@ class GameCanvas extends Component {
     }
 
     render() {
-        const gameHeight = 1200;
+        const gameHeight = 1300;
         const viewBox = [window.innerWidth / -2, 100 - gameHeight, window.innerWidth, gameHeight];
         const style = { border: '1px solid black' };
         return (
@@ -51,13 +51,14 @@ class GameCanvas extends Component {
                 <ConnonBase />
                 <ConnonBall position={{ x: 0, y: -100 }} />
                 <CurrentScore score={15} />
-                {this.props.gameState.started && <>
-                    <FlyingObject position={{ x: -150, y: -300 }} />
-                    <FlyingObject position={{ x: 150, y: -300 }} />
-                </>}
+                {this.props.gameState.started &&
+                    this.props.gameState.flyingObjects.map(
+                        flyingObject => <FlyingObject key={flyingObject.id} position={flyingObject.position} />)}
                 <Heart position={{ x: -300, y: 35 }} />
-                {!this.props.gameState.started && <StartGameButton onClick={this.props.startGame} />}
-                <Title />
+                {!this.props.gameState.started && <>
+                    <StartGameButton onClick={this.props.startGame} />
+                    <Title />
+                </>}
             </svg>
         );
     }
